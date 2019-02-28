@@ -68,6 +68,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
     private String mediaType = "any";
     private boolean multiple = false;
     private boolean showOther = false;
+    private boolean chooseFile = false;
     private boolean includeBase64 = false;
     private boolean includeExif = false;
     private boolean cropping = false;
@@ -118,6 +119,7 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
     private void setConfiguration(final ReadableMap options) {
         mediaType = options.hasKey("mediaType") ? options.getString("mediaType") : mediaType;
         multiple = options.hasKey("multiple") && options.getBoolean("multiple");
+        chooseFile = options.hasKey("chooseFile") && options.getBoolean("chooseFile");
         showOther = options.hasKey("showOther") && options.getBoolean("showOther");
         includeBase64 = options.hasKey("includeBase64") && options.getBoolean("includeBase64");
         includeExif = options.hasKey("includeExif") && options.getBoolean("includeExif");
@@ -323,8 +325,11 @@ class PickerModule extends ReactContextBaseJavaModule implements ActivityEventLi
         try {
             Intent galleryIntent = null;
             if(showOther) {
+
                 galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 galleryIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiple);
+               // galleryIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
             } else {
                 galleryIntent =  new Intent(Intent.ACTION_GET_CONTENT);
                 if (cropping || mediaType.equals("photo")) {
